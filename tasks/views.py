@@ -1,12 +1,10 @@
 from django.shortcuts import render
-
-def task_list(request):
-    return render(request, 'tasks/task_list.html')
-
-def task_detail(request, task_id):
-    return render(request, 'tasks/task_detail.html', {'task_id': task_id})
-
-from django.http import HttpResponse
+from .models import Task
 
 def index(request):
-    return HttpResponse("Hello from the tasks app!")
+    todo_tasks = Task.objects.filter(completed=False).order_by('-due_date')
+    done_tasks = Task.objects.filter(completed=True).order_by('-due_date')
+    return render(request, 'tasks/index.html', {
+        'todo_tasks': todo_tasks,
+        'done_tasks': done_tasks,
+    })
